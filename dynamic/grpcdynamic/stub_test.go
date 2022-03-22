@@ -72,7 +72,7 @@ var payload = &grpc_testing.Payload{
 }
 
 func TestUnaryRpc(t *testing.T) {
-	resp, err := stub.InvokeRpc(context.Background(), unaryMd, &grpc_testing.SimpleRequest{Payload: payload})
+	resp, err := stub.InvokeRpc(context.Background(), "", unaryMd, &grpc_testing.SimpleRequest{Payload: payload})
 	testutil.Ok(t, err, "Failed to invoke unary RPC")
 	dm := resp.(*dynamic.Message)
 	fd := dm.GetMessageDescriptor().FindFieldByName("payload")
@@ -81,7 +81,7 @@ func TestUnaryRpc(t *testing.T) {
 }
 
 func TestClientStreamingRpc(t *testing.T) {
-	cs, err := stub.InvokeRpcClientStream(context.Background(), clientStreamingMd)
+	cs, err := stub.InvokeRpcClientStream(context.Background(), "", clientStreamingMd)
 	testutil.Ok(t, err, "Failed to invoke client-streaming RPC")
 	req := &grpc_testing.StreamingInputCallRequest{Payload: payload}
 	for i := 0; i < 3; i++ {
@@ -98,7 +98,7 @@ func TestClientStreamingRpc(t *testing.T) {
 }
 
 func TestServerStreamingRpc(t *testing.T) {
-	ss, err := stub.InvokeRpcServerStream(context.Background(), serverStreamingMd, &grpc_testing.StreamingOutputCallRequest{
+	ss, err := stub.InvokeRpcServerStream(context.Background(), "", serverStreamingMd, &grpc_testing.StreamingOutputCallRequest{
 		Payload: payload,
 		ResponseParameters: []*grpc_testing.ResponseParameters{
 			{}, {}, {}, // three entries means we'll get back three responses
@@ -118,7 +118,7 @@ func TestServerStreamingRpc(t *testing.T) {
 }
 
 func TestBidiStreamingRpc(t *testing.T) {
-	bds, err := stub.InvokeRpcBidiStream(context.Background(), bidiStreamingMd)
+	bds, err := stub.InvokeRpcBidiStream(context.Background(), "", bidiStreamingMd)
 	testutil.Ok(t, err)
 	req := &grpc_testing.StreamingOutputCallRequest{Payload: payload}
 	for i := 0; i < 3; i++ {

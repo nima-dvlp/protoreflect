@@ -45,7 +45,7 @@ func requestMethod(md *desc.MethodDescriptor) string {
 }
 
 // InvokeRpc sends a unary RPC and returns the response. Use this for unary methods.
-func (s Stub) InvokeRpc(ctx context.Context, method *desc.MethodDescriptor, request proto.Message, opts ...grpc.CallOption) (proto.Message, error) {
+func (s Stub) InvokeRpc(ctx context.Context, perfixPath string, method *desc.MethodDescriptor, request proto.Message, opts ...grpc.CallOption) (proto.Message, error) {
 	if method.IsClientStreaming() || method.IsServerStreaming() {
 		return nil, fmt.Errorf("InvokeRpc is for unary methods; %q is %s", method.GetFullyQualifiedName(), methodType(method))
 	}
@@ -60,7 +60,7 @@ func (s Stub) InvokeRpc(ctx context.Context, method *desc.MethodDescriptor, requ
 }
 
 // InvokeRpcServerStream sends a unary RPC and returns the response stream. Use this for server-streaming methods.
-func (s Stub) InvokeRpcServerStream(ctx context.Context, method *desc.MethodDescriptor, request proto.Message, opts ...grpc.CallOption) (*ServerStream, error) {
+func (s Stub) InvokeRpcServerStream(ctx context.Context, perfixPath string, method *desc.MethodDescriptor, request proto.Message, opts ...grpc.CallOption) (*ServerStream, error) {
 	if method.IsClientStreaming() || !method.IsServerStreaming() {
 		return nil, fmt.Errorf("InvokeRpcServerStream is for server-streaming methods; %q is %s", method.GetFullyQualifiedName(), methodType(method))
 	}
@@ -98,7 +98,7 @@ func (s Stub) InvokeRpcServerStream(ctx context.Context, method *desc.MethodDesc
 
 // InvokeRpcClientStream creates a new stream that is used to send request messages and, at the end,
 // receive the response message. Use this for client-streaming methods.
-func (s Stub) InvokeRpcClientStream(ctx context.Context, method *desc.MethodDescriptor, opts ...grpc.CallOption) (*ClientStream, error) {
+func (s Stub) InvokeRpcClientStream(ctx context.Context, perfixPath string, method *desc.MethodDescriptor, opts ...grpc.CallOption) (*ClientStream, error) {
 	if !method.IsClientStreaming() || method.IsServerStreaming() {
 		return nil, fmt.Errorf("InvokeRpcClientStream is for client-streaming methods; %q is %s", method.GetFullyQualifiedName(), methodType(method))
 	}
@@ -123,7 +123,7 @@ func (s Stub) InvokeRpcClientStream(ctx context.Context, method *desc.MethodDesc
 
 // InvokeRpcBidiStream creates a new stream that is used to both send request messages and receive response
 // messages. Use this for bidi-streaming methods.
-func (s Stub) InvokeRpcBidiStream(ctx context.Context, method *desc.MethodDescriptor, opts ...grpc.CallOption) (*BidiStream, error) {
+func (s Stub) InvokeRpcBidiStream(ctx context.Context, perfixPath string, method *desc.MethodDescriptor, opts ...grpc.CallOption) (*BidiStream, error) {
 	if !method.IsClientStreaming() || !method.IsServerStreaming() {
 		return nil, fmt.Errorf("InvokeRpcBidiStream is for bidi-streaming methods; %q is %s", method.GetFullyQualifiedName(), methodType(method))
 	}
