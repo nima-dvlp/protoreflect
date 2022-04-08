@@ -53,8 +53,10 @@ func (s Stub) InvokeRpc(ctx context.Context, perfixPath string, method *desc.Met
 		return nil, err
 	}
 	resp := s.mf.NewMessage(method.GetOutputType())
-	if err := s.channel.Invoke(ctx, requestMethod(method), request, resp, opts...); err != nil {
-		return nil, err
+	call := fmt.Sprintf("%s%s", perfixPath, requestMethod(method))
+	//println("Calling on protoreflect ??? :", call)
+	if err := s.channel.Invoke(ctx, call, request, resp, opts...); err != nil {
+		return resp, err
 	}
 	return resp, nil
 }
