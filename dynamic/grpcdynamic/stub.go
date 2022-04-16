@@ -56,7 +56,11 @@ func (s Stub) InvokeRpc(ctx context.Context, perfixPath string, method *desc.Met
 	call := fmt.Sprintf("%s%s", perfixPath, requestMethod(method))
 	//println("Calling on protoreflect ??? :", call)
 	if err := s.channel.Invoke(ctx, call, request, resp, opts...); err != nil {
-		return resp, err
+		if err.Error() == "rpc error: code = Internal desc = server closed the stream without sending trailers" {
+			println("Warning: trailers ignored!")
+			return resp, nil
+		}
+		return nil, err
 	}
 	return resp, nil
 }
